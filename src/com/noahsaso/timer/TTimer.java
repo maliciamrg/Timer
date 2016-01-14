@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.GridLayout;
-//import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 public class TTimer {
@@ -39,7 +39,10 @@ public class TTimer {
 	
 	public static boolean isPaused = false;
 	public static boolean isRunning = false;
+	
+	public static  JProgressBar progressBar;
 	//Stop defining stuff
+	
 	
 	public static void main(String[] args) {
 		
@@ -97,6 +100,12 @@ public class TTimer {
 		});
 		
 		//Add stuff
+		progressBar = new JProgressBar();
+		progressBar.setMinimum(0);
+		progressBar.setValue(0);
+
+
+		
 		fieldPanel.setLayout(new GridLayout(1,3));
 		fieldPanel.add(fieldh);
 		fieldPanel.add(fieldm);
@@ -106,6 +115,7 @@ public class TTimer {
 		panel.add(startStopButton);
 		panel.add(pausePlayButton);
 		panel.add(label);
+		panel.add(progressBar);
 		panel.add(paddingLabel);
 		panel.add(paddingLabel2);
 		//Done adding stuff
@@ -153,7 +163,10 @@ public class TTimer {
 			label.setText("Please specify a number");
 			return;
 		}else {
-			label.setText(String.valueOf(Integer.valueOf(SEC)+(Integer.valueOf(MIN)*60)+(Integer.valueOf(HOU)*3600)));
+			int v = Integer.valueOf(SEC)+(Integer.valueOf(MIN)*60)+(Integer.valueOf(HOU)*3600);
+			progressBar.setMaximum(v);
+			progressBar.setStringPainted(true);
+			label.setText(String.valueOf(v));
 		}
 		
 		//Start timer
@@ -220,6 +233,11 @@ public class TTimer {
 		oldCount = Math.round(oldCount*100.0)/100.0;
 		if(oldCount<=0.0) oldCount = 0.0;
 		label.setText(String.valueOf(oldCount));
+		
+		int progress = (int)oldCount;
+		String message = String.format("Completed %d%%.\n", progress);
+		progressBar.setName(message);
+		progressBar.setValue(progress);
 		
 		//If timer is done, say Done! and shake window
 		if(oldCount == 0.0) {
