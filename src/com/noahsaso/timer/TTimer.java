@@ -3,6 +3,7 @@ package com.noahsaso.timer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridLayout;
 //import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -30,7 +31,9 @@ public class TTimer {
 	public static JLabel label = new JLabel("0.0");
 	public static JLabel paddingLabel = new JLabel(" ");
 	public static JLabel paddingLabel2 = new JLabel(" ");
-	public static JTextField field = new JTextField();
+	public static JTextField fields = new JTextField();
+	public static JTextField fieldm = new JTextField();
+	public static JTextField fieldh = new JTextField();
 	
 	public static Timer timer = new Timer();
 	
@@ -46,20 +49,28 @@ public class TTimer {
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
-		field.setPreferredSize(new Dimension(180, 25));
-		field.setHorizontalAlignment(JTextField.CENTER);
+		fields.setPreferredSize(new Dimension(60, 25));
+		fields.setHorizontalAlignment(JTextField.CENTER);
+		fieldm.setPreferredSize(new Dimension(60, 25));
+		fieldm.setHorizontalAlignment(JTextField.CENTER);
+		fieldh.setPreferredSize(new Dimension(60, 25));
+		fieldh.setHorizontalAlignment(JTextField.CENTER);
 		
 		//Set tooltips
 		startStopButton.setToolTipText("Start timer");
 		pausePlayButton.setToolTipText("Pause timer");
-		field.setToolTipText("Seconds for timer");
+		fields.setToolTipText("Seconds for timer");
+		fieldm.setToolTipText("Minutes for timer");
+		fieldh.setToolTipText("Hours for timer");
 		label.setToolTipText("Timer");
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		//panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 		
 		//Center all fields
-		field.setAlignmentX(Component.CENTER_ALIGNMENT);
+		fields.setAlignmentX(Component.CENTER_ALIGNMENT);
+		fieldm.setAlignmentX(Component.CENTER_ALIGNMENT);
+		fieldh.setAlignmentX(Component.CENTER_ALIGNMENT);
 		startStopButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pausePlayButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -86,7 +97,10 @@ public class TTimer {
 		});
 		
 		//Add stuff
-		fieldPanel.add(field);
+		fieldPanel.setLayout(new GridLayout(1,3));
+		fieldPanel.add(fieldh);
+		fieldPanel.add(fieldm);
+		fieldPanel.add(fields);
 		
 		panel.add(fieldPanel);
 		panel.add(startStopButton);
@@ -124,16 +138,22 @@ public class TTimer {
 			timer = new Timer();
 		
 		//Get string
-		String TEXT = field.getText();
-		if(TEXT == "")
-			TEXT = "60.0";
+		String SEC = fields.getText();
+		if(SEC.equals(""))
+			SEC = "0";
+		String MIN = fieldm.getText();
+		if(MIN.equals(""))
+			MIN = "0";
+		String HOU = fieldh.getText();
+		if(HOU.equals(""))
+			HOU = "0";
 		
 		//Check if string is number
-		if(!isNumeric(TEXT)) {
+		if(!isNumeric(SEC)||!isNumeric(MIN)||!isNumeric(HOU)) {
 			label.setText("Please specify a number");
 			return;
 		}else {
-			label.setText(TEXT);
+			label.setText(String.valueOf(Integer.valueOf(SEC)+(Integer.valueOf(MIN)*60)+(Integer.valueOf(HOU)*3600)));
 		}
 		
 		//Start timer
